@@ -15,12 +15,23 @@ ui <- fluidPage(
     ),
     # Show a plot of the generated distribution
     mainPanel(
-      plotOutput(outputId = "distPlot")
+      plotOutput(outputId = "distPlot"),
+      # ----
+      # ADD THIS
+      # ----
+      textOutput(outputId = "eruptionCounter")
     )
   )
 )
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  # ----
+  # ADD THIS
+  # This isn't particularly good code, we probably wouldn't call this data.
+  # We're just doing it to make sure a git conflict happens later!
+  # ----
+  data <- faithful %>%
+    summarise(num_eruptions = n())
   output$distPlot <- renderPlot({
     # draw the histogram with the specified number of bins
     faithful %>% ggplot(aes(x = waiting)) +
@@ -28,6 +39,12 @@ server <- function(input, output) {
       xlab("Waiting time (mins)") +
       ylab("Number of eruptions") +
       ggtitle("Histogram of eruption waiting times")
+  })
+  # ----
+  # ADD THIS
+  # ----
+  output$eruptionCounter <- renderText({
+    paste("Number of eruptions in histogram: ", data$num_eruptions)
   })
 }
 # Run the application 
